@@ -1,5 +1,5 @@
 /*
-ESPOPC -- Open Pixel Control server for ESP8266.
+ESPOPC -- ESP32 fork of Open Pixel Control server for ESP8266.
 
 The MIT License (MIT)
 
@@ -23,12 +23,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#include <Client.h>
+#include <WiFi.h>
+#include <ESPmDNS.h>
 
-#include <ESP8266WiFi.h>
-#include <ESP8266mDNS.h>
-
-const char* ssid = "xxxxxx";
-const char* password = "yyyyyyyyyyyyyyyy";
+#include <secrets.h>
+// Create file secrets.h with these variables and add it to .gitignore
+// const char* ssid = "your-ssid";
+// const char* password = "your-ssid-pass";
 
 MDNSResponder mdns;
 // Actual name will be "espopc.local"
@@ -41,8 +43,8 @@ WiFiServer server(7890);
 #define OSCDEBUG    (0)
 
 #include <NeoPixelBus.h>
-const int PixelCount = 1024;
-const int PixelPin = 2;
+const int PixelCount = 256;
+const int PixelPin = 32;
 
 // three element pixels, in different order and speeds
 //NeoPixelBus<NeoGrbFeature, Neo800KbpsMethod> strip(PixelCount, PixelPin);
@@ -58,8 +60,8 @@ const int PixelPin = 2;
 
 // Uart method is good for the Esp-01 or other pin restricted modules
 // NOTE: These will ignore the PIN and use GPI02 pin
-NeoPixelBus<NeoGrbFeature, NeoEsp8266Uart800KbpsMethod> strip(PixelCount, PixelPin);
-//NeoPixelBus<NeoRgbFeature, NeoEsp8266Uart400KbpsMethod> strip(PixelCount, PixelPin);
+NeoPixelBus<NeoGrbFeature, NeoEsp32I2s1800KbpsMethod> strip(PixelCount, PixelPin);
+//NeoPixelBus<NeoRgbFeature, NeoEsp32BitBang400KbpsMethod> strip(PixelCount, PixelPin);
 
 // The bitbang method is really only good if you are not using WiFi features of the ESP
 // It works with all but pin 16
@@ -110,7 +112,7 @@ void setup() {
   Serial.println(WiFi.localIP());
 
   // Set up mDNS responder:
-  if (!mdns.begin(myDNSName, WiFi.localIP())) {
+  if (!mdns.begin(myDNSName)) {
     Serial.println("Error setting up MDNS responder!");
   }
   else {
