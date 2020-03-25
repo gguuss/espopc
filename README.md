@@ -1,5 +1,5 @@
 # espopc
-ESP8266 Open Pixel Control protocol for WS281x LEDs
+(ESP32 fork of) Open Pixel Control protocol for WS281x LEDs
 
 ESPOPC is similar to a Fadecandy controller with Fadecandy server with a WiFi
 interface. Adding a battery makes the LED array + ESP8266 combination portable.
@@ -7,7 +7,7 @@ interface. Adding a battery makes the LED array + ESP8266 combination portable.
 ## System overview
 
 ```
- PC running      -> WiFi -> ESP8266 -> 3.3V -> 5V -> NeoPixel
+ PC running      -> WiFi -> ESP32 -> 3.3V -> 5V -> NeoPixel
  grid8x8_dot.pde                                     8x8 array
 ```
 
